@@ -1,0 +1,228 @@
+.data-viewer {
+    position: relative;
+    /*border: 2px solid black;*/
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 25em;
+    /*min-height: 30em;*/
+}
+
+.viewer {
+    position: relative;
+    width: 65em;
+    /*border: 2px solid black;*/
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin: auto;
+    margin-bottom: 2em;
+}
+
+.viewer iframe {
+    /*border: 2px solid black;*/
+    border-radius: 5px;
+}
+
+.doc-card {
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    color: var(--p);
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9em;
+    /*border: 2px solid black;*/
+    padding-block: 1em;
+    background-color: #1f202b;
+    background-color: transparent;
+    margin-bottom: 1em;
+    transition: box-shadow 0.3s ease-in;
+    border-top: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+.doc-card:nth-child(1) {
+    border: none;
+}
+
+.data-viewer:last-child {
+    margin: 0em;
+}
+
+.doc-card:hover {
+    box-shadow: none;
+}
+
+.doc-card-name {
+    color: rgb(219, 219, 219);
+    font-weight: lighter;
+    letter-spacing: 2px;
+    font-size: 1em;
+}
+
+.doc-card-specialist_in {
+    color: var(--p);
+    font-size: 0.8em;
+    letter-spacing: 2px;
+}
+
+.doc-card-stats {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 1.3em;
+    margin-block: 0.5em;
+    opacity: 0.9;
+}
+
+.doc-card-stats * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-right: 1em;
+}
+
+.doc-card-stats * p {
+    margin-right: 0.6em;
+}
+
+.doc-card-appointments {
+    /*color: #b8091b;*/
+    color: #fff;
+}
+
+.doc-card-review {
+    /*color: #f2af13;*/
+    color: #fff;
+}
+
+.search-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    margin-top: 2em;
+}
+
+.search-top {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2em;
+    height: fit-content;
+}
+
+.search-top input {
+    position: relative;
+    width: 30em;
+    height: 3em;
+    border-radius: 1.5em;
+    padding-inline: 2em;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px;
+    margin-bottom: 2em;
+    font-weight: 100;
+}
+
+.search-btn {
+    position: relative;
+    color: var(--p);
+    border: 2px solid var(--p);
+    border-radius: 0.5em;
+    padding-inline: 0.9em;
+    padding-block: 0.2em;
+    cursor: pointer;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s ease-in-out;
+    margin-left: 2em;
+}
+
+.Specialist {
+    position: relative;
+    width: 30em;
+    height: 3em;
+    border-radius: 1.5em;
+    padding-inline: 2em;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px;
+    margin-bottom: 2em;
+    font-weight: 100;
+}
+
+.Specialist:focus {
+    outline: none;
+    border: 1px solid var(--p);
+}
+
+.search-btn:hover {
+    background-color: var(--p);
+    color: #000;
+}
+
+.search-top input:focus {
+    outline: none;
+    border: 1px solid var(--p);
+}
+
+.search-filter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 800px) {
+    .data-viewer {
+        padding-inline: 1em;
+    }
+}
+
+@media only screen and (max-width: 720px) {
+    .doc-card {
+        margin-right: 0em;
+    }
+
+    .viewer {
+        width: 50em;
+    }
+}
+
+@media only screen and (max-width: 1228px) {
+    .viewer {
+        font-size: 0.9rem;
+    }
+}
+
+@media only screen and (max-width: 960px) {
+    .viewer .google-map {
+        display: none;
+    }
+
+    .viewer {
+        font-size: 0.5rem;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .search-section input {
+        width: 20em;
+    }
+
+    .viewer {
+        width: 43em;
+    }
+}
