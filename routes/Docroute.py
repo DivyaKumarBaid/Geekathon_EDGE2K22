@@ -1,10 +1,8 @@
 from fastapi import Depends, APIRouter, HTTPException, status
-import uuid
 from datetime import date
 import database
 from routes import oauth2
-import appointment_notification
-from schemas import (Inc_appointment, Show_all_appointments, Show_appointment,User, appointment, del_appointment)
+from schemas import (User, appointment, del_appointment)
 
 router = APIRouter(tags=["Doc Appointment Route"], prefix="/docroute")
 
@@ -26,7 +24,7 @@ def delete_appointment_only_docs(del_appointment: del_appointment, current_user:
             if not obj["appointment_id"] == del_appointment.appointment_id:
                 new_appointments.append(obj)
             else:
-                new_deleted=obj
+                new_deleted=dict(obj)
         
         myquery = {"doc_id": del_appointment.doc_id}
         newvalues = {"$set": {"appointments_inreview": new_appointments}}

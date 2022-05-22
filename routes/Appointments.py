@@ -4,7 +4,7 @@ from datetime import date
 import database
 from routes import oauth2
 import appointment_notification
-from schemas import (Inc_appointment, Show_all_appointments, Show_appointment,User, appointment, del_appointment)
+from schemas import (Inc_appointment, Show_all_appointments, Show_appointment,User, appointment)
 
 
 router = APIRouter(tags=["User Appointment Route"], prefix="/userroute")
@@ -34,10 +34,11 @@ def create_appointment(Inc_appointment: Inc_appointment, current_user: User = De
                 time=Inc_appointment.time,
             )
 
-
+            # for doc
             prev_appoints_docs = cursor_doc['appointments_inreview']
             prev_appoints_docs.append(dict(appointed))
 
+            # for user
             prev_appoints_user = cursor['appointments']
             prev_appoints_user.append(dict(appointed))
 

@@ -181,6 +181,7 @@ def getDoc(approve:del_appointment,current_user: User = Depends(oauth2.get_curre
     try:
         cursor = database.docs.find_one({"doc_id": id})
         if cursor:
+            # for doc
             new_to_review=[]
             new_approved_to_doc = cursor['appointment_approved']
             newlyadded = {}
@@ -192,13 +193,19 @@ def getDoc(approve:del_appointment,current_user: User = Depends(oauth2.get_curre
                     new_approved_to_doc.append(obj)
                     newlyadded=obj
 
+# for user
             cursor_user = database.user_col.find_one({"user_id":newlyadded["user_id"]})
 
             prev_appoints_user = cursor_user['approved_appointments']
             prev_appoints_user.append(dict(newlyadded))
+
+            new_to_review_user=[]
+            for obj in cursor_user['appointments']:
+                if not obj['appointment_id'] == approve.appointment_id:
+                    new_to_review_user.append(obj)
             
             myquery = {"user_id": newlyadded["user_id"]}
-            newvalues = {"$set": {"approved_appointments": prev_appoints_user}}
+            newvalues = {"$set": {"approved_appointments": prev_appoints_user,"appointments":new_to_review_user}}
             updated = database.user_col.update_one(myquery, newvalues)
 
             myquery_doc = {"doc_id": approve.doc_id}
