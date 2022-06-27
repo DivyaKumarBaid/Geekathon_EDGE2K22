@@ -6,10 +6,10 @@ import os
 from fastapi import Depends, HTTPException, status
 
 
-ACCESS_TOKEN_SECRET_KEY = "h7qdsGDSr6AGg9616-VPSEP0w18vgXnMpey3JHvNPq8"
-REFRESH_TOKEN_SECRET_KEY = "IBLGcEAxWWKQ-_Gr4rNfaH0HhvnBbZuEm_xi3clioOs"
-EMAIL_TOKEN_SECRET_KEY = "JF_GcOWLg-Ycz_h8Bv_7PvnSCV-n_OuLsWg2HXBCtU0"
-ALGORITHM = "HS256"
+ACCESS_TOKEN_SECRET_KEY = os.environ['ATOKEN']
+REFRESH_TOKEN_SECRET_KEY = os.environ['RTOKEN']
+EMAIL_TOKEN_SECRET_KEY = os.environ['ETOKEN']
+ALGORITHM = os.environ['ALGO']
 
 # access token
 def create_access_token(data: dict):
