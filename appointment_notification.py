@@ -18,8 +18,8 @@ def appointment_email(doc_id:str,user_id:str,app_date:str,app_time:str,online:bo
       message = EmailMessage()
       # The mail addresses and password
       recievers_mail = i
-      sender_address = "dev.blogs.2022@gmail.com"
-      sender_pass = "devblogs2022"
+      sender_address = os.environ['EMAILADD']
+      sender_pass = os.environ['EMAILPASS']
       message['From'] = sender_address
       message['To'] = recievers_mail
       # The subject line

@@ -15,8 +15,8 @@ def email(remail: str,doctor:bool):
 
     message = EmailMessage()
     # The mail addresses and password
-    sender_address = "dev.blogs.2022@gmail.com"
-    sender_pass = "devblogs2022"
+    sender_address = os.environ['EMAILADD']
+    sender_pass = os.environ['EMAILPASS']
     receiver_address = remail
     message['From'] = sender_address
     message['To'] = receiver_address
