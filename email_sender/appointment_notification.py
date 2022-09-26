@@ -21,8 +21,8 @@ def appointment_email(doc_id: str, user_id: str, app_date: str, app_time: str, o
         message = EmailMessage()
         # The mail addresses and password
         recievers_mail = i
-        sender_address = os.getenv('EMAILADD')
-        sender_pass = os.getenv('EMAILPASS')
+        sender_address = os.getenv('EMAIL_ID')
+        sender_pass = os.getenv('EMAIL_PASS')
         message['From'] = sender_address
         message['To'] = recievers_mail
         # The subject line
