@@ -1,6 +1,10 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 
+
+from typing import Optional
+from pydantic import BaseModel, EmailStr, Field
+
 #review model
 class review(BaseModel):
     doc_id:str=Field(...)
@@ -42,7 +46,6 @@ class Show_all_appointments(BaseModel):
     user_id:str=Field(...)
 
 # appointments
-
 
 #signup doc
 class Signup_doc(BaseModel):
@@ -112,67 +115,3 @@ class LocalitySearch(BaseModel):
     address:str = Field(...)
     pincode:str = Field(...)
 # doc model complete
-
-#user model
-
-#user signup
-class User(BaseModel):
-    user: str = Field(...)
-    email: EmailStr = Field(...)
-    password: str = Field(...)
-
-# before validating user
-class Pre_userdata(BaseModel):
-    user: str = Field(...)
-    password: str = Field(...)
-    email: EmailStr = Field(...)
-    user_id: str = Field(...)
-    email_token: str = Field(...)
-
-# after validation of user
-class User_data(BaseModel):
-    user: str = Field(...)
-    email: EmailStr = Field(...)
-    password: str = Field(...)
-    user_id: str = Field(...)
-    appointments :list[dict] = []
-    approved_appointments :list[dict] = []
-
-
-#user model complete
-
-#Login model
-#from front end    
-class Login(BaseModel):
-    email: EmailStr = Field(...)
-    password: str = Field(...)
-
-#from backend to frontend after login
-class ResLogin(BaseModel):
-    user: str = Field(...)
-    user_id: str = Field(...)
-    access_token: str = Field(...)
-    refresh_token: str = Field(...)
-    token_type: str = Field(...)
-    doctor:bool = False
-
-# verify on set interval
-class IntervalToken_inc(BaseModel):
-    refresh_token: str
-
-
-class IntervalToken_ret(BaseModel):
-    access_token: str
-
-# used in verification of token data
-class TokenData(BaseModel):
-    email: Optional[str] = None
-
-# class TokenDataPayload(BaseModel):
-#     sub: Optional[str] = None
-#     name:str
-#     user_id:str
-#     doctor:bool
-
-#Login model
-

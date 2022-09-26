@@ -3,8 +3,9 @@ from fastapi import Depends, APIRouter, HTTPException, status
 import config.database as database
 import uuid
 from routes.auth import oauth2
-from schemas import (IntervalToken_inc, IntervalToken_ret, LocalitySearch,
-                     Pre_doc, Signup_doc, User, del_appointment, doc_data, show_doc)
+from routes.doctor.models import (LocalitySearch,Pre_doc, Signup_doc, del_appointment, doc_data, show_doc)
+from routes.login.models import (IntervalToken_inc, IntervalToken_ret)
+from routes.users.models import (User)
 import email_sender.email_verification as email_verification
 import routes.auth.hashing as hashing
 from routes.auth import Token

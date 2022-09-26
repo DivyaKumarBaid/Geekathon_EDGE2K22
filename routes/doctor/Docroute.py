@@ -2,7 +2,8 @@ from fastapi import Depends, APIRouter, HTTPException, status
 from datetime import date
 import config.database as database
 from routes.auth import oauth2
-from schemas import (User, appointment, del_appointment)
+from routes.users.models import (User)
+from routes.doctor.models import (appointment, del_appointment)
 
 router = APIRouter(tags=["Doc Appointment Route"], prefix="/docroute")
 

@@ -4,8 +4,9 @@ from datetime import date
 import config.database as database
 from routes.auth import oauth2
 import email_sender.appointment_notification as appointment_notification
-from schemas import (Inc_appointment, Show_all_appointments,
-                     Show_appointment, User, appointment)
+from routes.users.models import (User)
+from routes.doctor.models import (Inc_appointment, Show_all_appointments,
+                     Show_appointment, appointment)
 
 
 router = APIRouter(tags=["User Appointment Route"], prefix="/userroute")

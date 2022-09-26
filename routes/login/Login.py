@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 import config.database as database
 import routes.auth.hashing as hashing
 from routes.auth import Token
-from schemas import (ResLogin)
+from routes.login.models import (ResLogin)
 
 
 router = APIRouter(prefix="/Login", tags=['Login'])
