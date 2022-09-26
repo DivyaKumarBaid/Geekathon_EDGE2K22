@@ -1,7 +1,10 @@
 import smtplib
 from email.message import EmailMessage
-import database
+import config.database as database
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def email(remail: str,doctor:bool):
@@ -15,8 +18,8 @@ def email(remail: str,doctor:bool):
 
     message = EmailMessage()
     # The mail addresses and password
-    sender_address = os.environ['EMAILADD']
-    sender_pass = os.environ['EMAILPASS']
+    sender_address = os.getenv('EMAIL_ID')
+    sender_pass = os.getenv('EMAIL_PASS')
     receiver_address = remail
     message['From'] = sender_address
     message['To'] = receiver_address
