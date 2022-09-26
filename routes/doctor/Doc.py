@@ -1,11 +1,13 @@
 from email.utils import localtime
 from fastapi import Depends, APIRouter, HTTPException, status
-import database
+import config.database as database
 import uuid
-from schemas import (IntervalToken_inc, IntervalToken_ret, LocalitySearch,Pre_doc, Signup_doc, User, del_appointment, doc_data, show_doc)
-import email_verification
-import hashing
-from routes import Token, oauth2
+from routes.auth import oauth2
+from schemas import (IntervalToken_inc, IntervalToken_ret, LocalitySearch,
+                     Pre_doc, Signup_doc, User, del_appointment, doc_data, show_doc)
+import email_sender.email_verification as email_verification
+import routes.auth.hashing as hashing
+from routes.auth import Token
 
 
 router = APIRouter(tags=["Doc"], prefix="/doc")
@@ -18,10 +20,10 @@ def create_doc(inc_doc: Signup_doc):
         etoken = Token.create_email_token(data={"sub": inc_doc.email})
 
         Docs = Pre_doc(
-            doc=inc_doc.doc, 
+            doc=inc_doc.doc,
             password=hashing.hash_pass(inc_doc.password),
             email=inc_doc.email,
-            doc_id=str(uuid.uuid4()), 
+            doc_id=str(uuid.uuid4()),
             email_token=etoken,
             specialist_in=inc_doc.specialist_in,
             phone=inc_doc.phone,
@@ -29,7 +31,7 @@ def create_doc(inc_doc: Signup_doc):
             locality=inc_doc.locality,
             address=inc_doc.address,
             pincode=inc_doc.pincode
-            )
+        )
 
         cursor2 = database.docs.find_one({"email": inc_doc.email})
 
@@ -44,7 +46,7 @@ def create_doc(inc_doc: Signup_doc):
                     {"email": inc_doc.email})
 
             res = database.unverified_doc.insert_one(dict(Docs))
-            email_verification.email(inc_doc.email,True)
+            email_verification.email(inc_doc.email, True)
             if not res:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT)
 
@@ -72,7 +74,6 @@ def verify_doc_email(token: str):
         address=cursor["address"],
         pincode=cursor["pincode"]
     )
- 
 
     res = database.unverified_offline_doc.insert_one(dict(doc))
 
@@ -129,7 +130,8 @@ def verify_doc_offline(doc_id: str, current_user: User = Depends(oauth2.get_curr
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    dele = database.unverified_offline_doc.delete_one({"email": cursor["email"]})
+    dele = database.unverified_offline_doc.delete_one(
+        {"email": cursor["email"]})
     if not dele:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -137,8 +139,8 @@ def verify_doc_offline(doc_id: str, current_user: User = Depends(oauth2.get_curr
     raise HTTPException(status_code=status.HTTP_201_CREATED)
 
 
-@router.get("/search/{locality}",status_code=200)
-def getDocs(locality:str):
+@router.get("/search/{locality}", status_code=200)
+def getDocs(locality: str):
     try:
         doctors = []
         cursor = database.docs.find(
@@ -153,7 +155,7 @@ def getDocs(locality:str):
                     phone=res["phone"],
                     address=res["address"],
                     pincode=res["pincode"],
-                    )
+                )
                 )
 
         return doctors
@@ -176,13 +178,13 @@ def getDoc(id):
 
 
 @ router.get('/approve', status_code=200)
-def getDoc(approve:del_appointment,current_user: User = Depends(oauth2.get_current_doc_user)):
+def getDoc(approve: del_appointment, current_user: User = Depends(oauth2.get_current_doc_user)):
 
     try:
         cursor = database.docs.find_one({"doc_id": id})
         if cursor:
             # for doc
-            new_to_review=[]
+            new_to_review = []
             new_approved_to_doc = cursor['appointment_approved']
             newlyadded = {}
 
@@ -191,32 +193,34 @@ def getDoc(approve:del_appointment,current_user: User = Depends(oauth2.get_curre
                     new_to_review.append(obj)
                 else:
                     new_approved_to_doc.append(obj)
-                    newlyadded=obj
+                    newlyadded = obj
 
 # for user
-            cursor_user = database.user_col.find_one({"user_id":newlyadded["user_id"]})
+            cursor_user = database.user_col.find_one(
+                {"user_id": newlyadded["user_id"]})
 
             prev_appoints_user = cursor_user['approved_appointments']
             prev_appoints_user.append(dict(newlyadded))
 
-            new_to_review_user=[]
+            new_to_review_user = []
             for obj in cursor_user['appointments']:
                 if not obj['appointment_id'] == approve.appointment_id:
                     new_to_review_user.append(obj)
-            
+
             myquery = {"user_id": newlyadded["user_id"]}
-            newvalues = {"$set": {"approved_appointments": prev_appoints_user,"appointments":new_to_review_user}}
+            newvalues = {"$set": {
+                "approved_appointments": prev_appoints_user, "appointments": new_to_review_user}}
             updated = database.user_col.update_one(myquery, newvalues)
 
             myquery_doc = {"doc_id": approve.doc_id}
-            newvalues_doc = {"$set": {"appointments_inreview": new_to_review,"appointments_approved":new_approved_to_doc}}
+            newvalues_doc = {"$set": {
+                "appointments_inreview": new_to_review, "appointments_approved": new_approved_to_doc}}
 
             updated_doc = database.docs.update_one(myquery_doc, newvalues_doc)
-            
+
             # return show_doc(**cursor)
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    

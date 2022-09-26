@@ -1,27 +1,23 @@
-
 from fastapi import Depends, APIRouter, HTTPException, status
-import database
+import config.database as database
 import uuid
-from schemas import (IntervalToken_inc, IntervalToken_ret,Pre_userdata, User, User_data)
-import email_verification
-import hashing
-from routes import Token
-
+from schemas import (IntervalToken_inc, IntervalToken_ret,
+                     Pre_userdata, User, User_data)
+import email_sender.email_verification as email_verification
+import routes.auth.hashing as hashing
+from routes.auth import Token
+import os
 
 router = APIRouter(tags=["Users"], prefix="/users")
-
 
 @router.post('/create', status_code=201)
 def create_user(inc_user: User):
 
-    try:
+    # try:
         etoken = Token.create_email_token(data={"sub": inc_user.email})
-
         Users = Pre_userdata(user=inc_user.user, password=hashing.hash_pass(
             inc_user.password), email=inc_user.email, user_id=str(uuid.uuid4()), email_token=etoken)
-
         cursor2 = database.user_col.find_one({"email": inc_user.email})
-
         if cursor2:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT)
 
@@ -33,12 +29,13 @@ def create_user(inc_user: User):
                     {"email": inc_user.email})
 
             res = database.unverified_user.insert_one(dict(Users))
-            email_verification.email(inc_user.email,False)
+
+            email_verification.email(inc_user.email, False)
             if not res:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT)
 
-    except:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # except:
+    #     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @router.get("/email_verification/{token}", status_code=200)
@@ -82,4 +79,3 @@ def verify_user_token(rtoken: IntervalToken_inc):
 
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-

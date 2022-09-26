@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import (Appointments, Docroute, Users, Login,Doc)
+from routes.doctor import (Docroute)
+from routes.doctor import Appointments
+from routes.doctor import Doc
+from routes.login import Login
+from routes.users import Users
 
 app = FastAPI()
 

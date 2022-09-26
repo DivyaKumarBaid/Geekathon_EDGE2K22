@@ -1,17 +1,22 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 import schemas
-import database
+import config.database as database
 import os
 from fastapi import Depends, HTTPException, status
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-ACCESS_TOKEN_SECRET_KEY = os.environ['ATOKEN']
-REFRESH_TOKEN_SECRET_KEY = os.environ['RTOKEN']
-EMAIL_TOKEN_SECRET_KEY = os.environ['ETOKEN']
-ALGORITHM = os.environ['ALGO']
+ACCESS_TOKEN_SECRET_KEY = os.getenv('ATOKEN')
+REFRESH_TOKEN_SECRET_KEY = os.getenv('RTOKEN')
+EMAIL_TOKEN_SECRET_KEY = os.getenv('ETOKEN')
+ALGORITHM = os.getenv('ALGO')
 
 # access token
+
+
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=30)
@@ -21,6 +26,8 @@ def create_access_token(data: dict):
     return encoded_jwt
 
 # refresh token
+
+
 def create_refresh_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(days=20)
@@ -30,6 +37,8 @@ def create_refresh_token(data: dict):
     return encoded_jwt
 
 # email token
+
+
 def create_email_token(data: dict):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(days=2)
@@ -38,7 +47,9 @@ def create_email_token(data: dict):
         to_encode, EMAIL_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-#verify token at email
+# verify token at email
+
+
 def verify_email_token(token: str):
     try:
         payload = jwt.decode(
@@ -83,6 +94,8 @@ def verify_admin_token(token: str, credentials_exception):
 # admin token
 
 # decode user accesstoken
+
+
 def verify_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(
@@ -103,7 +116,9 @@ def verify_token(token: str, credentials_exception):
     except JWTError:
         raise credentials_exception
 
-#decode user refresh token
+# decode user refresh token
+
+
 def verify_token_at_call(token: str):
     try:
         payload = jwt.decode(
@@ -125,6 +140,8 @@ def verify_token_at_call(token: str):
 # admin
 
 # decode doc accesstoken
+
+
 def verify_doc_token(token: str, credentials_exception):
     try:
         payload = jwt.decode(
@@ -145,7 +162,9 @@ def verify_doc_token(token: str, credentials_exception):
     except JWTError:
         raise credentials_exception
 
-#decode user refresh token
+# decode user refresh token
+
+
 def verify_doc_token_at_call(token: str):
     try:
         payload = jwt.decode(
@@ -167,7 +186,7 @@ def verify_doc_token_at_call(token: str):
 # admin
 # admin
 
-#decode to get payload
+# decode to get payload
 def getPayload(token: str):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -192,4 +211,3 @@ def getPayload(token: str):
 
     except JWTError:
         raise credentials_exception
-
